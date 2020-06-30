@@ -38,7 +38,7 @@ textSize(30);
 if(instruction)
 {
       text('Press Arrow Keys to move', 100,100);
-      text('Press Space to Jump', 100, 200);
+      text('Press Space to jump', 100, 200);
     }
 
 
