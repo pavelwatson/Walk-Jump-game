@@ -6,6 +6,9 @@ var isLeft;
 var isRight;
 var isPlummeting;
 var isFalling;
+var timer;
+
+var instruction;
 
 function setup() {
   createCanvas(1024, 576);
@@ -16,6 +19,11 @@ function setup() {
   isRight = false;
   isPlummeting = false;
   isFalling = false;
+  instruction = true;
+  timer = {
+    count: 0,
+    sus: false
+  };
 }
 
 function draw() {
@@ -24,6 +32,16 @@ function draw() {
   noStroke();
   fill(0, 155, 0);
   rect(0, floorPos_y, width, height - floorPos_y);
+
+fill(0);
+textSize(30);
+if(instruction)
+{
+      text('Press Arrow Keys to move', 100,100);
+      text('Press Space to Jump', 100, 200);
+    }
+
+
 
   if (isLeft && isFalling) {
     /////////////////////////// adds jumping-left code ////////////////////////////////
@@ -571,9 +589,18 @@ function draw() {
 
   }
 
+  if(timer.sus)
+  {
+    timer.count += 1;
+  }
+  if(timer.count >= 150)
+  {
+    instruction = false;
+  }
+
   if (isLeft && isFalling) {
     gameChar_x -= 7;
-  } else if (isRight && isFalling) { 
+  } else if (isRight && isFalling) {
     gameChar_x += 7;
   } else if (isLeft) {
     gameChar_x -= 4;
@@ -597,6 +624,10 @@ function draw() {
 
 
 function keyPressed() {
+
+
+  timer.sus = true;
+
   if (keyCode == 32 && gameChar_y == floorPos_y) {
     isPlummeting = true;
   }
