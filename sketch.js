@@ -6,9 +6,17 @@ var isLeft;
 var isRight;
 var isPlummeting;
 var isFalling;
-var timer;
+
+var tree;
+var canyon;
+var mountain;
+var cloud;
+
+var collectable;
+var isFound;
 
 var instruction;
+var timer;
 
 function setup() {
   createCanvas(1024, 576);
@@ -24,6 +32,30 @@ function setup() {
     count: 0,
     sus: false
   };
+  tree = {
+    x_pos: width / 2 - 100,
+    y_pos: floorPos_y - 32
+  };
+  canyon = {
+    x_pos: 50,
+    width: 100
+  };
+  mountain = {
+    x_pos: 400,
+    y_pos: 200,
+    size: 100
+  };
+  cloud = {
+    x_pos: 100,
+    y_pos: 100,
+    size: 150
+  };
+  collectable = {
+    x_pos: 240,
+    y_pos: 400,
+    size: 150,
+    isFound: false
+  };
 }
 
 function draw() {
@@ -33,13 +65,55 @@ function draw() {
   fill(0, 155, 0);
   rect(0, floorPos_y, width, height - floorPos_y);
 
-fill(0);
-textSize(30);
-if(instruction)
-{
-      text('Press Arrow Keys to move', 100,100);
-      text('Press Space to jump', 100, 200);
-    }
+  /////////////////// CANYON ///////////////////
+  noStroke();
+  fill(100, 155, 255);
+  rect(canyon.x_pos, floorPos_y, canyon.width, width - floorPos_y);
+  /////////////////// MOUNTAIN ///////////////////
+  fill(187, 198, 220);
+  triangle(mountain.x_pos + 20 * mountain.size / 100, mountain.y_pos - 1 * mountain.size / 100, mountain.x_pos + 100 * mountain.size / 100, mountain.y_pos + 189 * mountain.size / 100, mountain.x_pos - 22 * mountain.size / 100, mountain.y_pos + 197 * mountain.size / 100);
+  fill(161, 169, 192);
+  triangle(mountain.x_pos - 106 * mountain.size / 100, mountain.y_pos + 231 * mountain.size / 100, mountain.x_pos + 128 * mountain.size / 100, mountain.y_pos + 232 * mountain.size / 100, mountain.x_pos - 9 * mountain.size / 100, mountain.y_pos + 39 * mountain.size / 100);
+  triangle(mountain.x_pos + 57 * mountain.size / 100, mountain.y_pos + 46 * mountain.size / 100, mountain.x_pos + 135 * mountain.size / 100, mountain.y_pos + 232 * mountain.size / 100, mountain.x_pos - 49 * mountain.size / 100, mountain.y_pos + 232 * mountain.size / 100);
+  fill(255);
+  triangle(mountain.x_pos + 57 * mountain.size / 100, mountain.y_pos + 46 * mountain.size / 100, mountain.x_pos + 70 * mountain.size / 100, mountain.y_pos + 80 * mountain.size / 100, mountain.x_pos + 57 * mountain.size / 100, mountain.y_pos + 68 * mountain.size / 100);
+  triangle(mountain.x_pos + 57 * mountain.size / 100, mountain.y_pos + 46 * mountain.size / 100, mountain.x_pos + 42 * mountain.size / 100, mountain.y_pos + 73 * mountain.size / 100, mountain.x_pos + 57 * mountain.size / 100, mountain.y_pos + 68 * mountain.size / 100);
+  triangle(mountain.x_pos - 9 * mountain.size / 100, mountain.y_pos + 39 * mountain.size / 100, mountain.x_pos - 31 * mountain.size / 100, mountain.y_pos + 80 * mountain.size / 100, mountain.x_pos - 9 * mountain.size / 100, mountain.y_pos + 74 * mountain.size / 100);
+  triangle(mountain.x_pos - 9 * mountain.size / 100, mountain.y_pos + 74 * mountain.size / 100, mountain.x_pos - 9 * mountain.size / 100, mountain.y_pos + 39 * mountain.size / 100, mountain.x_pos + 16 * mountain.size / 100, mountain.y_pos + 73 * mountain.size / 100);
+  triangle(mountain.x_pos + 20 * mountain.size / 100, mountain.y_pos - 1 * mountain.size / 100, mountain.x_pos + 34 * mountain.size / 100, mountain.y_pos + 32 * mountain.size / 100, mountain.x_pos + 23 * mountain.size / 100, mountain.y_pos + 28 * mountain.size / 100);
+  triangle(mountain.x_pos + 23 * mountain.size / 100, mountain.y_pos + 28 * mountain.size / 100, mountain.x_pos + 21 * mountain.size / 100, mountain.y_pos - 1 * mountain.size / 100, mountain.x_pos + 13 * mountain.size / 100, mountain.y_pos + 32 * mountain.size / 100);
+  /////////////////// TREE ///////////////////
+  noStroke();
+  fill(190, 95, 23); //tree trunk
+  triangle(tree.x_pos + 67, tree.y_pos + 32, tree.x_pos + 82, tree.y_pos + 16, tree.x_pos + 84, tree.y_pos + 32);
+  triangle(tree.x_pos + 84, tree.y_pos + 32, tree.x_pos + 86, tree.y_pos + 18, tree.x_pos + 101, tree.y_pos + 32);
+  rect(tree.x_pos + 78, tree.y_pos, 12, 32);
+  fill(34, 124, 17); //tree leaves
+  triangle(tree.x_pos + 40, tree.y_pos + 11, tree.x_pos + 83, tree.y_pos - 29, tree.x_pos + 85, tree.y_pos + 3);
+  triangle(tree.x_pos + 84, tree.y_pos + 3, tree.x_pos + 83, tree.y_pos - 29, tree.x_pos + 128, tree.y_pos + 12);
+  triangle(tree.x_pos + 40, tree.y_pos - 11, tree.x_pos + 82, tree.y_pos - 48, tree.x_pos + 122, tree.y_pos - 11);
+  triangle(tree.x_pos + 50, tree.y_pos - 37, tree.x_pos + 80, tree.y_pos - 69, tree.x_pos + 115, tree.y_pos - 36);
+  triangle(tree.x_pos + 54, tree.y_pos - 57, tree.x_pos + 83, tree.y_pos - 84, tree.x_pos + 112, tree.y_pos - 58);
+  /////////////////// CLOUD ///////////////////
+  fill(255);
+  ellipse(cloud.x_pos + 1 * cloud.size / 100, cloud.y_pos + 11 * cloud.size / 100, 25 * cloud.size / 100, 25 * cloud.size / 100);
+  ellipse(cloud.x_pos + 40 * cloud.size / 100, cloud.y_pos - 2 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  ellipse(cloud.x_pos + 76 * cloud.size / 100, cloud.y_pos + 37 * cloud.size / 100, 50 * cloud.size / 100, 52 * cloud.size / 100);
+  ellipse(cloud.x_pos + 60 * cloud.size / 100, cloud.y_pos + 9 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  ellipse(cloud.x_pos + 21 * cloud.size / 100, cloud.y_pos + 10 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  ellipse(cloud.x_pos - 19 * cloud.size / 100, cloud.y_pos + 39 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  ellipse(cloud.x_pos - 4 * cloud.size / 100, cloud.y_pos + 30 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  ellipse(cloud.x_pos - 18 * cloud.size / 100, cloud.y_pos + 40 * cloud.size / 100, 45 * cloud.size / 100, 45 * cloud.size / 100);
+  rect(cloud.x_pos - 15 * cloud.size / 100, cloud.y_pos + 21 * cloud.size / 100, 96 * cloud.size / 100, 42 * cloud.size / 100);
+
+
+
+  fill(0);
+  textSize(30);
+  if (instruction) {
+    text('Press Arrow Keys to move', 100, 100);
+    text('Press Space to jump', 100, 200);
+  }
 
 
 
@@ -585,40 +659,41 @@ if(instruction)
       gameChar_x + 10, gameChar_y - 65,
       gameChar_x, gameChar_y - 75
     );
-
-
   }
 
-  if(timer.sus)
-  {
+  if (dist(collectable.x_pos, collectable.y_pos, gameChar_x, gameChar_y) <= 35) {
+    collectable.isFound = true;
+  }
+  if (collectable.isFound == false) {
+    /////////////////// COLLECTABLE ITEM ///////////////////
+    fill(79, 195, 247);
+    stroke(0);
+    strokeWeight(0.5);
+    triangle(collectable.x_pos - 21 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos + 7 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 32 * collectable.size / 100);
+    line(collectable.x_pos - 13 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 32 * collectable.size / 100);
+    line(collectable.x_pos - 1 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 32 * collectable.size / 100);
+    triangle(collectable.x_pos - 21 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 16 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos - 13 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100);
+    triangle(collectable.x_pos - 16 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos - 13 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100);
+    triangle(collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos - 13 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 1 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100);
+    triangle(collectable.x_pos - 1 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos - 7 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos + 3 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100);
+    triangle(collectable.x_pos + 3 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos - 1 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos + 7 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100);
+  }
+
+  //instruction
+  if (timer.sus) {
     timer.count += 1;
   }
-  if(timer.count >= 150)
-  {
+  if (timer.count >= 150) {
     instruction = false;
   }
 
-  if (isLeft && isFalling) {
-    gameChar_x -= 7;
-  } else if (isRight && isFalling) {
-    gameChar_x += 7;
-  } else if (isLeft) {
-    gameChar_x -= 4;
-  } else if (isRight) {
-    gameChar_x += 4;
-  }
 
-  // actual jump
-  if (isPlummeting && gameChar_y > floorPos_y - 100) {
-    gameChar_y -= 6;
-    isFalling = true;
-  } else if (gameChar_y < floorPos_y) {
-    isPlummeting = false;
-    gameChar_y += 6;
-  } else {
-    isFalling = false;
-    isPlummeting = false;
-  }
+
+
+
+
+
+
 
 }
 
@@ -628,12 +703,12 @@ function keyPressed() {
 
   timer.sus = true;
 
-  if (keyCode == 32 && gameChar_y == floorPos_y) {
+  if (keyCode == 32 ) {
     isPlummeting = true;
   }
   if (keyCode == 37) {
     isLeft = true;
-  } else if (keyCode == 39) {
+  } if (keyCode == 39) {
     isRight = true;
   }
 }
