@@ -19,7 +19,7 @@ var isFound;
 var instruction;
 var timer;
 
-var outsideOfCanyon_range;
+var wholeGame_range;
 var canyon_range;
 
 function setup() {
@@ -35,7 +35,7 @@ function setup() {
   instruction = true;
   timer = {
     count: 0,
-    sus: false
+    status: false
   };
   tree = {
     x_pos: width / 2 - 100,
@@ -685,71 +685,39 @@ function draw() {
   }
 
   //instruction disappearance
-  if (timer.sus) {
+  if (timer.status) {
     timer.count += 1;
   }
   if (timer.count >= 150) {
     instruction = false;
   }
 
-  //initializing variables for range of Canyon and Outside of Canyon
-  outsideOfCanyon_range = gameChar_x >= 0 && gameChar_x <= width;
+  //initializing variables for Canyon and OutsideOfCanyon ranges
+  wholeGame_range = gameChar_x >= 0 && gameChar_x <= width;
   canyon_range = gameChar_x >= canyon.x_pos && gameChar_x <= canyon.x_pos + canyon.width;
 
-  //moving left in canyon
-  if (isLeft && isFalling && gameChar_x >= canyon.x_pos + 7.5 && gameChar_y > floorPos_y) {
-    gameChar_x -= 7.5;
-  } else if (isLeft && gameChar_x >= canyon.x_pos + 7.5 && gameChar_y > floorPos_y) {
-    gameChar_x -= 7.5;
-  }
-  //moving left ouside of canyon in a jump(extra speed boost in Jump for better looking)
-  else if (isLeft && isFalling && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && outsideOfCanyon_range) {
-    gameChar_x -= 7.5;
-  }
-  //moving left ouside of canyon
-  else if (isLeft && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && outsideOfCanyon_range) {
+  //moving/jumping left in canyon
+  if ((isLeft && gameChar_x > canyon.x_pos + 7.5 && gameChar_y > floorPos_y) || (isLeft && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && wholeGame_range)) {
     gameChar_x -= 7.5;
   }
 
-  //moving right in canyon
-  if (isRight && isFalling && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) {
-    gameChar_x += 7.5;
-  } else if (isRight && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) {
-    gameChar_x += 7.5;
-  }
-  //moving right ouside of canyon in a jump(extra speed boost in Jump for better looking)
-  else if (isRight && isFalling && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && outsideOfCanyon_range) {
-    gameChar_x += 7.5;
-  }
-  //moving right outside of canyon
-  else if (isRight && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && outsideOfCanyon_range) {
+  //moving/jumping right
+  if ((isRight && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) || (isRight && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && wholeGame_range)) {
     gameChar_x += 7.5;
   }
 
-  //jump from canyon
-  if (isPlummetingCanyon && gameChar_y <= height + 10 && gameChar_y > height - 150) {
+  //jump
+  if ((isPlummetingCanyon && gameChar_y <= height + 10 && gameChar_y > height - 150) || (isPlummetingOutsideOfCanyon && wholeGame_range && gameChar_y <= floorPos_y && gameChar_y > floorPos_y - 150)) {
     isFalling = true;
     gameChar_y -= 6;
   }
-  // jump from outside of canyon
-  else if (isPlummetingOutsideOfCanyon && outsideOfCanyon_range && gameChar_y <= floorPos_y && gameChar_y > floorPos_y - 150) {
-    isFalling = true;
-    gameChar_y -= 6;
-  }
-  //gravity from canyon
-  else if (gameChar_y < height && canyon_range) {
+  //gravity
+  else if ((gameChar_y < height && canyon_range) || (wholeGame_range && gameChar_y < floorPos_y)) {
     isPlummetingCanyon = false;
     isPlummetingOutsideOfCanyon = false;
     isFalling = true;
     gameChar_y += 6;
   }
-  // gravity outside of canyon
-  else if (outsideOfCanyon_range && gameChar_y < floorPos_y) {
-    isPlummetingCanyon = false;
-    isPlummetingOutsideOfCanyon = false;
-    gameChar_y += 6;
-  }
-
   //turns off falling animation
   else {
     isFalling = false;
@@ -760,9 +728,9 @@ function draw() {
 
 function keyPressed() {
 
-  timer.sus = true;
+  timer.status = true;
 
-  if (keyCode == 32 && gameChar_y == floorPos_y) {
+  if (keyCode == 32 && gameChar_y == floorPos_y && wholeGame_range) {
     isPlummetingOutsideOfCanyon = true;
   } else if (keyCode == 32 && gameChar_y >= height && gameChar_y <= height + 10) {
     isPlummetingCanyon = true;
