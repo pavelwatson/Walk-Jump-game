@@ -4,7 +4,8 @@ var floorPos_y;
 
 var isLeft;
 var isRight;
-var isPlummeting;
+var isPlummetingCanyon;
+var isPlummetingOutsideOfCanyon;
 var isFalling;
 
 var tree;
@@ -18,6 +19,9 @@ var isFound;
 var instruction;
 var timer;
 
+var outsideOfCanyon_range;
+var canyon_range;
+
 function setup() {
   createCanvas(1024, 576);
   floorPos_y = height * 3 / 4;
@@ -25,7 +29,8 @@ function setup() {
   gameChar_y = floorPos_y;
   isLeft = false;
   isRight = false;
-  isPlummeting = false;
+  isPlummetingCanyon = false;
+  isPlummetingOutsideOfCanyon = false;
   isFalling = false;
   instruction = true;
   timer = {
@@ -38,7 +43,7 @@ function setup() {
   };
   canyon = {
     x_pos: 50,
-    width: 100
+    width: 150
   };
   mountain = {
     x_pos: 400,
@@ -51,7 +56,7 @@ function setup() {
     size: 150
   };
   collectable = {
-    x_pos: 240,
+    x_pos: 40,
     y_pos: 400,
     size: 150,
     isFound: false
@@ -111,8 +116,8 @@ function draw() {
   fill(0);
   textSize(30);
   if (instruction) {
-    text('Press Arrow Keys to move', 100, 100);
-    text('Press Space to jump', 100, 200);
+    text('Press Arrow Keys to move', 550, 100);
+    text('Press Space to jump', 550, 200);
   }
 
 
@@ -479,7 +484,7 @@ function draw() {
       gameChar_x - 8,
       gameChar_y - 20
     );
-  } else if (isFalling || isPlummeting) {
+  } else if (isFalling || isPlummetingCanyon || isPlummetingOutsideOfCanyon) {
     ////////////////////////////////////////////// adds jumping facing forwards code /////////////////////////////
     fill(248, 192, 155); //face
     ellipse(
@@ -679,7 +684,7 @@ function draw() {
     triangle(collectable.x_pos + 3 * collectable.size / 100, collectable.y_pos + 5 * collectable.size / 100, collectable.x_pos - 1 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100, collectable.x_pos + 7 * collectable.size / 100, collectable.y_pos + 12 * collectable.size / 100);
   }
 
-  //instruction
+  //instruction disappearance
   if (timer.sus) {
     timer.count += 1;
   }
@@ -687,31 +692,90 @@ function draw() {
     instruction = false;
   }
 
+  //initializing variables for range of Canyon and Outside of Canyon
+  outsideOfCanyon_range = gameChar_x >= 0 && gameChar_x <= width;
+  canyon_range = gameChar_x >= canyon.x_pos && gameChar_x <= canyon.x_pos + canyon.width;
 
+  //moving left in canyon
+  if (isLeft && isFalling && gameChar_x >= canyon.x_pos + 7.5 && gameChar_y > floorPos_y) {
+    gameChar_x -= 7.5;
+  } else if (isLeft && gameChar_x >= canyon.x_pos + 7.5 && gameChar_y > floorPos_y) {
+    gameChar_x -= 7.5;
+  }
+  //moving left ouside of canyon in a jump(extra speed boost in Jump for better looking)
+  else if (isLeft && isFalling && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && outsideOfCanyon_range) {
+    gameChar_x -= 7.5;
+  }
+  //moving left ouside of canyon
+  else if (isLeft && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && outsideOfCanyon_range) {
+    gameChar_x -= 7.5;
+  }
 
+  //moving right in canyon
+  if (isRight && isFalling && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) {
+    gameChar_x += 7.5;
+  } else if (isRight && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) {
+    gameChar_x += 7.5;
+  }
+  //moving right ouside of canyon in a jump(extra speed boost in Jump for better looking)
+  else if (isRight && isFalling && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && outsideOfCanyon_range) {
+    gameChar_x += 7.5;
+  }
+  //moving right outside of canyon
+  else if (isRight && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && outsideOfCanyon_range) {
+    gameChar_x += 7.5;
+  }
 
+  //jump from canyon
+  if (isPlummetingCanyon && gameChar_y <= height + 10 && gameChar_y > height - 150) {
+    isFalling = true;
+    gameChar_y -= 6;
+  }
+  // jump from outside of canyon
+  else if (isPlummetingOutsideOfCanyon && outsideOfCanyon_range && gameChar_y <= floorPos_y && gameChar_y > floorPos_y - 150) {
+    isFalling = true;
+    gameChar_y -= 6;
+  }
+  //gravity from canyon
+  else if (gameChar_y < height && canyon_range) {
+    isPlummetingCanyon = false;
+    isPlummetingOutsideOfCanyon = false;
+    isFalling = true;
+    gameChar_y += 6;
+  }
+  // gravity outside of canyon
+  else if (outsideOfCanyon_range && gameChar_y < floorPos_y) {
+    isPlummetingCanyon = false;
+    isPlummetingOutsideOfCanyon = false;
+    gameChar_y += 6;
+  }
 
-
-
-
-
+  //turns off falling animation
+  else {
+    isFalling = false;
+  }
 }
+
 
 
 function keyPressed() {
 
-
   timer.sus = true;
 
-  if (keyCode == 32 ) {
-    isPlummeting = true;
+  if (keyCode == 32 && gameChar_y == floorPos_y) {
+    isPlummetingOutsideOfCanyon = true;
+  } else if (keyCode == 32 && gameChar_y >= height && gameChar_y <= height + 10) {
+    isPlummetingCanyon = true;
   }
+
   if (keyCode == 37) {
     isLeft = true;
-  } if (keyCode == 39) {
+  }
+  if (keyCode == 39) {
     isRight = true;
   }
 }
+
 
 function keyReleased() {
   if (keyCode == 37) {
