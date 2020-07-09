@@ -78,7 +78,7 @@ function setup() {
       x_pos: 1000,
       width: 100
     }
-  ]
+  ];
   collectables = [{
       x_pos: (2 * canyons[0].x_pos + canyons[0].width) / 2 + 10,
       y_pos: floorPos_y - 150,
@@ -97,7 +97,7 @@ function setup() {
       size: 150,
       isFound: false
     }
-  ]
+  ];
 }
 
 function draw() {
@@ -109,7 +109,7 @@ function draw() {
 
 
   push();
-  translate(scrollPos, 0)
+  translate(scrollPos, 0);
 
   // Draw clouds.
   for (var i = 0; i < clouds.length; i++) {
@@ -128,16 +128,16 @@ function draw() {
   // Draw mountains.
   for (var i = 0; i < mountains.length; i++) {
     fill(187, 198, 220);
-    triangle(mountains[i].x_pos + 20 * mountains[i].size / 100, mountains[i].y_pos - 1 * mountains[i].size / 100, mountains[i].x_pos + 100 * mountains[i].size / 100, mountains[i].y_pos + 189 * mountains[i].size / 100, mountains[i].x_pos - 22 * mountains[i].size / 100, mountains[i].y_pos + 197 * mountains[i].size / 100);
+    triangle(mountains[i].x_pos + 20 * mountains[i].size / 100, mountains[i].y_pos - 1 * mountains[i].size / 100, mountains[i].x_pos + 100 * mountains[i].size / 100, floorPos_y, mountains[i].x_pos - 22 * mountains[i].size / 100, floorPos_y);
     fill(161, 169, 192);
-    triangle(mountains[i].x_pos - 106 * mountains[i].size / 100, mountains[i].y_pos + 231 * mountains[i].size / 100, mountains[i].x_pos + 128 * mountains[i].size / 100, mountains[i].y_pos + 232 * mountains[i].size / 100, mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 39 * mountains[i].size / 100);
-    triangle(mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 46 * mountains[i].size / 100, mountains[i].x_pos + 135 * mountains[i].size / 100, mountains[i].y_pos + 232 * mountains[i].size / 100, mountains[i].x_pos - 49 * mountains[i].size / 100, mountains[i].y_pos + 232 * mountains[i].size / 100);
+    triangle(mountains[i].x_pos - 106 * mountains[i].size / 100, floorPos_y, mountains[i].x_pos + 128 * mountains[i].size / 100, floorPos_y, mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 39 * mountains[i].size / 100 );
+    triangle(mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 46 * mountains[i].size / 100, mountains[i].x_pos + 135 * mountains[i].size / 100, floorPos_y, mountains[i].x_pos - 49 * mountains[i].size / 100, floorPos_y);
     fill(255);
-    triangle(mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 46 * mountains[i].size / 100, mountains[i].x_pos + 70 * mountains[i].size / 100, mountains[i].y_pos + 80 * mountains[i].size / 100, mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 68 * mountains[i].size / 100);
+    triangle(mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 46 * mountains[i].size / 100, mountains[i].x_pos + 70 * mountains[i].size / 100, mountains[i].y_pos + 80 * mountains[i].size / 100, mountains[i].x_pos + 50 * mountains[i].size / 100, mountains[i].y_pos + 68 * mountains[i].size / 100);
     triangle(mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 46 * mountains[i].size / 100, mountains[i].x_pos + 42 * mountains[i].size / 100, mountains[i].y_pos + 73 * mountains[i].size / 100, mountains[i].x_pos + 57 * mountains[i].size / 100, mountains[i].y_pos + 68 * mountains[i].size / 100);
-    triangle(mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 39 * mountains[i].size / 100, mountains[i].x_pos - 31 * mountains[i].size / 100, mountains[i].y_pos + 80 * mountains[i].size / 100, mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 74 * mountains[i].size / 100);
+    triangle(mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 39 * mountains[i].size / 100, mountains[i].x_pos - 31 * mountains[i].size / 100, mountains[i].y_pos + 80 * mountains[i].size / 100, mountains[i].x_pos - 5 * mountains[i].size / 100, mountains[i].y_pos + 74 * mountains[i].size / 100);
     triangle(mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 74 * mountains[i].size / 100, mountains[i].x_pos - 9 * mountains[i].size / 100, mountains[i].y_pos + 39 * mountains[i].size / 100, mountains[i].x_pos + 16 * mountains[i].size / 100, mountains[i].y_pos + 73 * mountains[i].size / 100);
-    triangle(mountains[i].x_pos + 20 * mountains[i].size / 100, mountains[i].y_pos - 1 * mountains[i].size / 100, mountains[i].x_pos + 34 * mountains[i].size / 100, mountains[i].y_pos + 32 * mountains[i].size / 100, mountains[i].x_pos + 23 * mountains[i].size / 100, mountains[i].y_pos + 28 * mountains[i].size / 100);
+    triangle(mountains[i].x_pos + 20 * mountains[i].size / 100, mountains[i].y_pos - 1 * mountains[i].size / 100, mountains[i].x_pos + 34 * mountains[i].size / 100, mountains[i].y_pos + 32 * mountains[i].size / 100, mountains[i].x_pos + 20 * mountains[i].size / 100, mountains[i].y_pos + 28 * mountains[i].size / 100);
     triangle(mountains[i].x_pos + 23 * mountains[i].size / 100, mountains[i].y_pos + 28 * mountains[i].size / 100, mountains[i].x_pos + 21 * mountains[i].size / 100, mountains[i].y_pos - 1 * mountains[i].size / 100, mountains[i].x_pos + 13 * mountains[i].size / 100, mountains[i].y_pos + 32 * mountains[i].size / 100);
   }
 
