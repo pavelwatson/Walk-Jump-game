@@ -697,13 +697,13 @@ function draw() {
   canyon_range = gameChar_x >= canyon.x_pos && gameChar_x <= canyon.x_pos + canyon.width;
 
   //moving/jumping left in canyon
-  if ((isLeft && gameChar_x > canyon.x_pos + 7.5 && gameChar_y > floorPos_y) || (isLeft && gameChar_y <= floorPos_y && gameChar_x >= 7.5 && wholeGame_range)) {
-    gameChar_x -= 7.5;
+  if ((isLeft && gameChar_x > canyon.x_pos + 7 && gameChar_y > floorPos_y) || (isLeft && gameChar_y <= floorPos_y && gameChar_x >= 7 && wholeGame_range)) {
+    gameChar_x -= 7;
   }
 
   //moving/jumping right
-  if ((isRight && gameChar_x < canyon.x_pos + canyon.width - 7.5 && gameChar_y > floorPos_y) || (isRight && gameChar_y <= floorPos_y && gameChar_x <= width - 7.5 && wholeGame_range)) {
-    gameChar_x += 7.5;
+  if ((isRight && gameChar_x < canyon.x_pos + canyon.width - 7 && gameChar_y > floorPos_y) || (isRight && gameChar_y <= floorPos_y && gameChar_x <= width - 7 && wholeGame_range)) {
+    gameChar_x += 7;
   }
 
   //jump
